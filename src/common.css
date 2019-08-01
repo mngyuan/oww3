@@ -1,0 +1,463 @@
+/*
+ * Defaults
+ *
+ * Resetting of browser defaults
+ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+/*
+ * Margins
+ *
+ * marginc    margin collapsible: responsively changes
+ */
+
+.margin-t-24 {
+  margin-top: 24px;
+}
+
+.margin-t-48 {
+  margin-top: 48px;
+}
+
+.margin-t-96 {
+  margin-top: 96px;
+}
+
+.marginc-t-240 {
+  margin-top: 240px;
+}
+
+.marginc-t-320 {
+  margin-top: 320px;
+}
+
+.marginc-t-400 {
+  margin-top: 400px;
+}
+
+.margin-r-24 {
+  margin-right: 24px;
+}
+
+.marginc-r-48 {
+  margin-right: 48px;
+}
+
+.margin-t-row-2 {
+  margin-top: calc(100% / 12 * 2);
+}
+
+.marginc-l-col-1 {
+  margin-left: calc(100% / 12 * 1);
+}
+
+.marginc-l-col-2 {
+  margin-left: calc(100% / 12 * 2);
+}
+
+.marginc-l-col-3 {
+  margin-left: calc(100% / 12 * 3);
+}
+
+.marginc-l-col-4 {
+  margin-left: calc(100% / 12 * 4);
+}
+
+.marginc-l-col-5 {
+  margin-left: calc(100% / 12 * 5);
+}
+
+.marginc-l-col-6 {
+  margin-left: calc(100% / 12 * 6);
+}
+
+.marginc-l-col-7 {
+  margin-left: calc(100% / 12 * 7);
+}
+
+.marginc-l-col-8 {
+  margin-left: calc(100% / 12 * 8);
+}
+
+.marginc-l-col-9 {
+  margin-left: calc(100% / 12 * 9);
+}
+
+@media only screen and (max-width: 768px) {
+  .marginc-l-col-1,
+  .marginc-l-col-2,
+  .marginc-l-col-3,
+  .marginc-l-col-4,
+  .marginc-l-col-5,
+  .marginc-l-col-6,
+  .marginc-l-col-7,
+  .marginc-l-col-8,
+  .marginc-l-col-9 {
+    margin-left: 0;
+  }
+  .marginc-t-240,
+  .marginc-t-320,
+  .marginc-t-400 {
+    margin-top: initial;
+  }
+
+  .marginc-r-48 {
+    margin-right: 0;
+    margin-bottom: 24px;
+  }
+}
+
+/*
+ * Positioning
+ *
+ */
+
+.f-initial,
+.col.f-initial,
+.row.f-initial {
+  flex: initial;
+}
+
+.p-absolute {
+  position: absolute;
+}
+
+.pc-absolute {
+  position: absolute;
+}
+
+@media only screen and (max-width: 768px) {
+  .pc-absolute {
+    position: initial;
+  }
+}
+
+/*
+ * Flex 12 col Layout System
+ *
+ */
+
+.cell {
+  position: relative;
+  padding: 16px;
+  display: flex;
+  box-sizing: border-box;
+}
+
+.cell.center {
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+.row:nth-last-child(1) {
+  border: none;
+}
+
+.row-1 {
+  height: calc(100% / 12);
+}
+
+.row-2 {
+  height: calc(100% / 12 * 2);
+}
+
+.row-3 {
+  height: calc(100% / 12 * 3);
+}
+
+.row-4 {
+  height: calc(100% / 12 * 4);
+}
+
+.row-5 {
+  height: calc(100% / 12 * 5);
+}
+
+.row-6 {
+  height: calc(100% / 12 * 6);
+}
+
+.row-7 {
+  height: calc(100% / 12 * 7);
+}
+
+.row-8 {
+  height: calc(100% / 12 * 8);
+}
+
+.row-9 {
+  height: calc(100% / 12 * 9);
+}
+
+.row-10 {
+  height: calc(100% / 12 * 10);
+}
+
+.row-11 {
+  height: calc(100% / 12 * 11);
+}
+
+.row-12 {
+  height: calc(100% / 12 * 12);
+}
+
+.a-center {
+  align-items: center;
+}
+
+.j-center {
+  justify-content: center;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.col-1 {
+  width: calc(100% / 12);
+  flex: initial;
+}
+
+.col-2 {
+  width: calc(100% / 12 * 2);
+  flex: initial;
+}
+
+.col-3 {
+  width: 25%;
+  flex: initial;
+}
+
+.col-4 {
+  width: calc(100% / 3);
+  flex: initial;
+}
+
+.col-5 {
+  width: calc(100% / 12 * 5);
+  flex: initial;
+}
+
+.col-6 {
+  width: 50%;
+  flex: initial;
+}
+
+.col-7 {
+  width: calc(100% / 12 * 7);
+  flex: initial;
+}
+
+.col-8 {
+  width: calc(100% / 3 * 2);
+  flex: initial;
+}
+
+.col-9 {
+  width: 75%;
+  flex: initial;
+}
+
+.col-10 {
+  width: calc(100% / 12 * 10);
+  flex: initial;
+}
+
+.col-11 {
+  width: calc(100% / 12 * 11);
+  flex: initial;
+}
+
+.col-12 {
+  width: 100%;
+  flex: initial;
+}
+
+.col-thin {
+  width: 24px;
+  flex: initial;
+}
+
+.flex-1 {
+  flex-grow: 1;
+  flex-basis: 0;
+}
+
+.flex-1-5 {
+  flex-grow: 1.5;
+  flex-basis: 0;
+}
+
+.border-b {
+  border-bottom: var(--border-weight) var(--border-style);
+}
+
+.border-r {
+  border-right: var(--border-weight) var(--border-style);
+}
+
+.border-l {
+  border-left: var(--border-weight) var(--border-style);
+}
+
+@media only screen and (max-width: 768px) {
+  .cell {
+    padding: 12px;
+  }
+  .row {
+    flex-direction: column;
+  }
+  .row.center {
+    align-items: flex-start;
+  }
+  .row .border-r {
+    border-right: none;
+    border-bottom: 2px solid black;
+  }
+  .row .border-l {
+    border-left: none;
+    border-bottom: 2px solid black;
+  }
+  .row .col-2,
+  .row .col-thin,
+  .row .col-3,
+  .row .col-9 {
+    width: initial;
+  }
+  .row .margin-r-24 {
+    margin-bottom: 24px;
+    margin-right: 0;
+  }
+
+  .row .flex-1-5,
+  .row .flex-1 {
+    flex-basis: auto;
+  }
+}
+
+/*
+ * Text styles
+ *
+ */
+
+.w100 {
+  font-weight: 300;
+}
+.w200 {
+  font-weight: 300;
+}
+.w300 {
+  font-weight: 300;
+}
+.w400 {
+  font-weight: 400;
+}
+.w500 {
+  font-weight: 500;
+}
+.w600 {
+  font-weight: 600;
+}
+.w700 {
+  font-weight: 700;
+}
+.w800 {
+  font-weight: 800;
+}
+.w900 {
+  font-weight: 900;
+}
+
+/*
+ * Components
+ *
+ */
+
+.close-button {
+  width: 48px;
+  height: 48px;
+  align-self: center;
+}
+
+.close-button > svg > path {
+  fill: white;
+}
+
+span.long-m-dash {
+  border-top: 1px solid white;
+  width: 4ch;
+  display: inline-block;
+  transform: translateY(calc(0.5px - 0.5ch));
+}
+
+/*
+ * Misc
+ *
+ */
+
+.img {
+  object-fit: cover;
+  max-width: 100%;
+}
+
+.img.vert {
+  object-fit: cover;
+  max-height: 100%;
+  max-width: initial;
+}
+
+.vertical-text,
+.vertical-text-r {
+  writing-mode: vertical-rl;
+  overflow: initial;
+  white-space: nowrap;
+  transform: rotate(180deg);
+  text-align: right;
+}
+.vertical-text-r {
+  text-align: left;
+  transform: none;
+}
+
+.on-load-fade-in {
+  /* invisible until loaded */
+  transform: translateZ(0.1px);
+  transition: opacity 0.9s ease-out, margin-top 0.6s ease-out;
+  margin-top: 36px;
+  opacity: 0;
+}
+.on-load-fade-in.visible {
+  opacity: 1;
+  margin-top: 0;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media only screen and (max-width: 768px) {
+  .vertical-text,
+  .vertical-text-r {
+    transform: initial;
+    writing-mode: initial;
+    text-align: left;
+  }
+
+  .mobile-only {
+    display: flex;
+  }
+}
