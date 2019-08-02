@@ -145,7 +145,10 @@ class RadioBank extends React.PureComponent {
             label={option.label}
             value={option.value}
             checked={this.state.selected === option.value}
-            handleChange={e => this.setState({selected: e.target.value})}
+            handleChange={e => {
+              this.setState({selected: e.target.value});
+              this.props.onChange(e.target.value);
+            }}
           />
         ))}
       </form>
@@ -179,12 +182,16 @@ class Slider extends React.PureComponent {
 }
 
 class Knob extends React.PureComponent {
-  state = {
-    deg: -60,
-    val: 0,
-    minAngle: -60,
-    maxAngle: 60,
-  };
+  constructor(props) {
+    super(props);
+    const {minAngle = -60, maxAngle = 60, defaultValue = 0} = this.props;
+    this.state = {
+      deg: (maxAngle - minAngle) * defaultValue + minAngle,
+      val: this.props.defaultValue,
+      minAngle,
+      maxAngle,
+    };
+  }
 
   startDrag = e => {
     e.preventDefault();
@@ -214,7 +221,7 @@ class Knob extends React.PureComponent {
       deg -= 90;
     }
     return deg > this.state.maxAngle
-      ? deg > this.state.maxAngle - this.state.minAngle + 180
+      ? deg > (this.state.maxAngle + this.state.minAngle) / 2 + 180
         ? this.state.minAngle
         : this.state.maxAngle
       : deg < this.state.minAngle
@@ -266,7 +273,9 @@ class Dropdown extends React.PureComponent {
 
 class App extends React.PureComponent {
   state = {
-    synth1: new Tone.PolySynth(6, Tone.Synth).toMaster(),
+    synth1: new Tone.PolySynth(6, Tone.Synth, {
+      oscillator: {type: 'sine'},
+    }).toMaster(),
     synth2: new Tone.PolySynth(6, Tone.Synth, {
       oscillator: {type: 'pwm'},
     }).toMaster(),
@@ -308,9 +317,14 @@ class App extends React.PureComponent {
                 {label: <SineIcon />, value: 'sine'},
                 {label: <SquareIcon />, value: 'square'},
                 {label: <TriangleIcon />, value: 'triangle'},
-                {label: <SawIcon />, value: 'saw'},
+                {label: <SawIcon />, value: 'sawtooth'},
               ]}
               name="osc1-wave"
+              onChange={oscType =>
+                this.state.synth1.voices.forEach(
+                  synth => (synth.oscillator.type = oscType),
+                )
+              }
             />
             <Slider min={0} max={100} step="any" label="A" />
             <Slider min={0} max={100} step="any" label="S" />
@@ -323,7 +337,7 @@ class App extends React.PureComponent {
               className="margin-r-8"
             />
             <div className="col f-initial a-center j-between">
-              <Knob small onChange={() => {}} />
+              <Knob small onChange={() => {}} defaultValue={0.5} />
               <TuneIcon />
               <Knob small onChange={() => {}} />
               <HarmonicIcon />
@@ -335,9 +349,14 @@ class App extends React.PureComponent {
                 {label: <SineIcon />, value: 'sine'},
                 {label: <SquareIcon />, value: 'square'},
                 {label: <TriangleIcon />, value: 'triangle'},
-                {label: <SawIcon />, value: 'saw'},
+                {label: <SawIcon />, value: 'sawtooth'},
               ]}
               name="osc2-wave"
+              onChange={oscType =>
+                this.state.synth2.voices.forEach(
+                  synth => (synth.oscillator.type = oscType),
+                )
+              }
             />
             <Slider min={0} max={100} step="any" label="A" />
             <Slider min={0} max={100} step="any" label="S" />
@@ -350,7 +369,7 @@ class App extends React.PureComponent {
               className="margin-r-8"
             />
             <div className="col f-initial a-center j-between">
-              <Knob small onChange={() => {}} />
+              <Knob small onChange={() => {}} defaultValue={0.5} />
               <TuneIcon />
               <Knob small onChange={() => {}} />
               <HarmonicIcon />
@@ -363,7 +382,15 @@ class App extends React.PureComponent {
               <LinkIcon />
             </div>
             <div className="col f-initial margin-r-32">
-              <Knob onChange={() => {}} />
+              <Knob
+                onChange={val => {
+                  this.state.synth1.volume.value = val * 25 - 5;
+                  this.state.synth2.volume.value = 20 - val * 25;
+                }}
+                minAngle={-180}
+                maxAngle={0}
+                defaultValue={0.5}
+              />
             </div>
             <div className="col f-initial a-center j-between">
               <Knob medium onChange={() => {}} />
