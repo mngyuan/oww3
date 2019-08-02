@@ -3,6 +3,23 @@
 import * as React from 'react';
 import Tone from 'tone';
 
+// from core-js
+function mathscale(x, inLow, inHigh, outLow, outHigh) {
+  if (
+    arguments.length === 0 ||
+    /* eslint-disable no-self-compare */
+    x != x ||
+    inLow != inLow ||
+    inHigh != inHigh ||
+    outLow != outLow ||
+    outHigh != outHigh
+    /* eslint-enable no-self-compare */
+  )
+    return NaN;
+  if (x === Infinity || x === -Infinity) return x;
+  return ((x - inLow) * (outHigh - outLow)) / (inHigh - inLow) + outLow;
+}
+
 const okf = o => Object.keys(o).filter(k => o[k]);
 const cnf = cno => okf(cno).join(' ');
 
@@ -95,26 +112,24 @@ const TYPING_MAP = {
   u: 'F#4',
   i: 'G#4',
   o: 'Bb4',
-  A: 'A4',
-  S: 'B4',
-  D: 'C5',
-  F: 'D5',
-  G: 'E5',
-  H: 'F5',
-  J: 'G5',
-  K: 'A5',
-  L: 'B5',
-  ':': 'C5',
-  Q: 'G#4',
-  W: 'Bb4',
-  R: 'C#5',
-  T: 'D#5',
-  U: 'F#5',
-  I: 'G#5',
-  O: 'Bb5',
+  A: 'A2',
+  S: 'B2',
+  D: 'C3',
+  F: 'D3',
+  G: 'E3',
+  H: 'F3',
+  J: 'G3',
+  K: 'A3',
+  L: 'B3',
+  ':': 'C3',
+  Q: 'G#2',
+  W: 'Bb2',
+  R: 'C#3',
+  T: 'D#3',
+  U: 'F#3',
+  I: 'G#3',
+  O: 'Bb3',
 };
-
-const Oscilloscope = props => <div className="oscilloscope"></div>;
 
 const RadioBankOption = props => (
   <div>
@@ -132,7 +147,7 @@ const RadioBankOption = props => (
 
 class RadioBank extends React.PureComponent {
   state = {
-    selected: this.props.options[0].value,
+    selected: this.props.defaultValue || this.props.options[0].value,
   };
 
   render() {
@@ -271,13 +286,68 @@ class Dropdown extends React.PureComponent {
   }
 }
 
+class Oscilloscope extends React.PureComponent {
+  canvas = React.createRef();
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      waveform: new Tone.Waveform(256),
+    };
+  }
+
+  componentDidMount() {
+    Tone.Master.connect(this.state.waveform);
+    this.loop(this.canvas.current);
+  }
+
+  loop = canvas => {
+    requestAnimationFrame(() => this.loop(canvas));
+    const {width, height} = canvas;
+    const context = canvas.getContext('2d');
+    const analysis = this.state.waveform.getValue();
+
+    const margin = height * 0.2;
+
+    context.clearRect(0, 0, width, height);
+    context.beginPath();
+
+    let firstValue;
+    for (let i = 0, len = analysis.length; i < len; i++) {
+      const x = mathscale(i, 0, len - 1, 0, width);
+      const y = mathscale(analysis[i], -1, 1, height - margin, margin);
+      if (i === 0) {
+        firstValue = y;
+        context.moveTo(x, y);
+      } else {
+        context.lineTo(x, y);
+      }
+    }
+    context.lineTo(width, height);
+    context.lineTo(0, height);
+    context.lineTo(0, firstValue);
+    context.lineCap = 'round';
+    // context.stroke();
+    context.fillStyle = '#f99e1c';
+    context.fill();
+  };
+
+  render() {
+    return (
+      <div className={`oscilloscope ${this.props.className}`}>
+        <canvas ref={this.canvas} width="64px" height="64px" />
+      </div>
+    );
+  }
+}
+
 class App extends React.PureComponent {
   state = {
     synth1: new Tone.PolySynth(6, Tone.Synth, {
       oscillator: {type: 'sine'},
     }).toMaster(),
     synth2: new Tone.PolySynth(6, Tone.Synth, {
-      oscillator: {type: 'pwm'},
+      oscillator: {type: 'square'},
     }).toMaster(),
     playing: [],
   };
@@ -308,9 +378,9 @@ class App extends React.PureComponent {
         className="synth row"
       >
         <div className="col col-1 margin-l-col-1">
-          <Oscilloscope />
+          <Oscilloscope className="margin-t-96" />
         </div>
-        <div className="col col-3">
+        <div className="col col-3 margin-l-24">
           <div className="row margin-t-96 margin-b-row-3">
             <RadioBank
               options={[
@@ -357,6 +427,7 @@ class App extends React.PureComponent {
                   synth => (synth.oscillator.type = oscType),
                 )
               }
+              defaultValue="triangle"
             />
             <Slider min={0} max={100} step="any" label="A" />
             <Slider min={0} max={100} step="any" label="S" />
@@ -384,8 +455,8 @@ class App extends React.PureComponent {
             <div className="col f-initial margin-r-32">
               <Knob
                 onChange={val => {
-                  this.state.synth1.volume.value = val * 25 - 5;
-                  this.state.synth2.volume.value = 20 - val * 25;
+                  this.state.synth1.volume.value = -25 + val * 25;
+                  this.state.synth2.volume.value = val * -25;
                 }}
                 minAngle={-180}
                 maxAngle={0}
