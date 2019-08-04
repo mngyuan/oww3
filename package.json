@@ -1,8 +1,8 @@
 {
-  "name": "oww2",
+  "name": "oww3",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://mngyuan.com/oww2",
+  "homepage": "http://mngyuan.com/oww3",
   "devDependencies": {
     "gh-pages": "^1.0.0",
     "react-scripts": "^3.0.1"
