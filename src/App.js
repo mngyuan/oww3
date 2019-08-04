@@ -173,7 +173,7 @@ class RadioBank extends React.PureComponent {
 
 class Slider extends React.PureComponent {
   state = {
-    val: this.props.min || 0,
+    val: this.props.initialValue || this.props.min || 0,
   };
 
   render() {
@@ -185,7 +185,11 @@ class Slider extends React.PureComponent {
         <input
           type="range"
           orient="vertical"
-          onChange={e => this.setState({val: e.target.value})}
+          onChange={e => {
+            const v = parseFloat(e.target.value);
+            this.setState({val: v});
+            this.props.onChange(v);
+          }}
           min={this.props.min}
           max={this.props.max}
           step={this.props.step}
@@ -342,28 +346,47 @@ class Oscilloscope extends React.PureComponent {
 }
 
 class App extends React.PureComponent {
-  state = {
-    synth1: new Tone.PolySynth(6, Tone.Synth, {
-      oscillator: {type: 'sine'},
-    }).toMaster(),
-    synth2: new Tone.PolySynth(6, Tone.Synth, {
-      oscillator: {type: 'square'},
-    }).toMaster(),
-    playing: [],
-  };
+  constructor(props) {
+    super(props);
+    const noiseEnv = new Tone.AmplitudeEnvelope({
+      attack: 0.5,
+      decay: 0.1,
+      sustain: 1,
+    });
+    this.state = {
+      synth1: new Tone.PolySynth(6, Tone.Synth, {
+        oscillator: {type: 'sine'},
+      }).toMaster(),
+      synth2: new Tone.PolySynth(6, Tone.Synth, {
+        oscillator: {type: 'triangle'},
+      }).toMaster(),
+      noise: new Tone.Noise({
+        type: 'brown',
+        volume: -45,
+      }).chain(noiseEnv, Tone.Master),
+      noiseEnv,
+      playing: [],
+    };
+  }
 
   handleKeyDown = e => {
     const note = TYPING_MAP[e.key];
-    if (!this.state.playing.includes(note)) {
+    if (note && !this.state.playing.includes(note)) {
       this.state.synth1.triggerAttack(note);
       this.state.synth2.triggerAttack(note);
+      this.state.noiseEnv.triggerAttack();
+      this.state.noise.start();
       this.setState(prevState => ({playing: [...prevState.playing, note]}));
     }
   };
   handleKeyUp = e => {
     const note = TYPING_MAP[e.key];
+    const playing = this.state.playing.filter(n => n !== note);
     this.state.synth1.triggerRelease(note);
     this.state.synth2.triggerRelease(note);
+    if (playing.length === 0) {
+      this.state.noiseEnv.triggerRelease();
+    }
     this.setState(prevState => ({
       playing: prevState.playing.filter(n => n !== note),
     }));
@@ -391,25 +414,86 @@ class App extends React.PureComponent {
               ]}
               name="osc1-wave"
               onChange={oscType =>
-                this.state.synth1.voices.forEach(
-                  synth => (synth.oscillator.type = oscType),
-                )
+                this.state.synth1.set({
+                  oscillator: {
+                    type: oscType,
+                  },
+                })
               }
             />
-            <Slider min={0} max={100} step="any" label="A" />
-            <Slider min={0} max={100} step="any" label="S" />
-            <Slider min={0} max={100} step="any" label="D" />
             <Slider
               min={0}
-              max={100}
+              max={1}
+              step="any"
+              label="A"
+              onChange={v =>
+                this.state.synth1.voices.forEach(
+                  synth => (synth.envelope.attack = v),
+                )
+              }
+              initialValue={this.state.synth1.voices[0].envelope.attack}
+            />
+            <Slider
+              min={0}
+              max={1}
+              step="any"
+              label="D"
+              onChange={v =>
+                this.state.synth1.voices.forEach(
+                  synth => (synth.envelope.decay = v),
+                )
+              }
+              initialValue={this.state.synth1.voices[0].envelope.decay}
+            />
+            <Slider
+              min={0}
+              max={1}
+              step="any"
+              label="S"
+              onChange={v =>
+                this.state.synth1.voices.forEach(
+                  synth => (synth.envelope.sustain = v),
+                )
+              }
+              initialValue={this.state.synth1.voices[0].envelope.sustain}
+            />
+            <Slider
+              min={0.005}
+              max={3}
               step="any"
               label="R"
               className="margin-r-8"
+              onChange={v =>
+                this.state.synth1.voices.forEach(
+                  synth => (synth.envelope.release = v),
+                )
+              }
+              initialValue={this.state.synth1.voices[0].envelope.release}
             />
             <div className="col f-initial a-center j-between">
-              <Knob small onChange={() => {}} defaultValue={0.5} />
+              <Knob
+                small
+                onChange={() => {}}
+                defaultValue={0.5}
+                minAngle={-120}
+                maxAngle={120}
+                onChange={v =>
+                  this.state.synth1.set({
+                    detune: (Math.round(24 * v) - 12) * 100,
+                  })
+                }
+              />
               <TuneIcon />
-              <Knob small onChange={() => {}} />
+              <Knob
+                small
+                onChange={v =>
+                  this.state.synth1.set({
+                    oscillator: {
+                      partials: [1, v ** 2, v ** 3, v ** 4, v ** 5, v ** 6],
+                    },
+                  })
+                }
+              />
               <HarmonicIcon />
             </div>
           </div>
@@ -423,26 +507,87 @@ class App extends React.PureComponent {
               ]}
               name="osc2-wave"
               onChange={oscType =>
-                this.state.synth2.voices.forEach(
-                  synth => (synth.oscillator.type = oscType),
-                )
+                this.state.synth2.set({
+                  oscillator: {
+                    type: oscType,
+                  },
+                })
               }
               defaultValue="triangle"
             />
-            <Slider min={0} max={100} step="any" label="A" />
-            <Slider min={0} max={100} step="any" label="S" />
-            <Slider min={0} max={100} step="any" label="D" />
             <Slider
               min={0}
-              max={100}
+              max={1}
+              step="any"
+              label="A"
+              onChange={v =>
+                this.state.synth2.voices.forEach(
+                  synth => (synth.envelope.attack = v),
+                )
+              }
+              initialValue={this.state.synth2.voices[0].envelope.attack}
+            />
+            <Slider
+              min={0}
+              max={1}
+              step="any"
+              label="D"
+              onChange={v =>
+                this.state.synth2.voices.forEach(
+                  synth => (synth.envelope.decay = v),
+                )
+              }
+              initialValue={this.state.synth2.voices[0].envelope.decay}
+            />
+            <Slider
+              min={0}
+              max={1}
+              step="any"
+              label="S"
+              onChange={v =>
+                this.state.synth2.voices.forEach(
+                  synth => (synth.envelope.sustain = v),
+                )
+              }
+              initialValue={this.state.synth2.voices[0].envelope.sustain}
+            />
+            <Slider
+              min={0.005}
+              max={3}
               step="any"
               label="R"
               className="margin-r-8"
+              onChange={v =>
+                this.state.synth2.voices.forEach(
+                  synth => (synth.envelope.release = v),
+                )
+              }
+              initialValue={this.state.synth2.voices[0].envelope.release}
             />
             <div className="col f-initial a-center j-between">
-              <Knob small onChange={() => {}} defaultValue={0.5} />
+              <Knob
+                small
+                minAngle={-120}
+                maxAngle={120}
+                onChange={() => {}}
+                defaultValue={0.5}
+                onChange={v =>
+                  this.state.synth1.set({
+                    detune: (Math.round(24 * v) - 12) * 100,
+                  })
+                }
+              />
               <TuneIcon />
-              <Knob small onChange={() => {}} />
+              <Knob
+                small
+                onChange={v =>
+                  this.state.synth2.set({
+                    oscillator: {
+                      partials: [1, v ** 2, v ** 3, v ** 4, v ** 5, v ** 6],
+                    },
+                  })
+                }
+              />
               <HarmonicIcon />
             </div>
           </div>
@@ -464,7 +609,12 @@ class App extends React.PureComponent {
               />
             </div>
             <div className="col f-initial a-center j-between">
-              <Knob medium onChange={() => {}} />
+              <Knob
+                medium
+                onChange={v =>
+                  this.state.noise.set({volume: -25 * (1 - v) - 10})
+                }
+              />
               <NoiseIcon />
             </div>
             <div className="col"></div>
