@@ -160,7 +160,18 @@ input[type='range']::-webkit-slider-thumb {
   cursor: pointer;
   border: 3px solid #d9d9da;
   background: #fcfcfa;
-  margin-top: -6px;
+  margin-top: -7px;
+  filter: drop-shadow(-1px 2px 5px rgba(0, 0, 0, 0.05));
+}
+
+input[type='range']::-moz-range-thumb {
+  -webkit-appearance: none;
+  height: 9px;
+  width: 9px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid #d9d9da;
+  background: #fcfcfa;
   filter: drop-shadow(-1px 2px 5px rgba(0, 0, 0, 0.05));
 }
 
@@ -180,6 +191,12 @@ input[type='range']::-ms-track {
 input[type='range'][orient='vertical']::-webkit-slider-runnable-track {
   height: 100%;
   width: 3px;
+  cursor: pointer;
+  background: #d9d9da;
+}
+input[type='range'][orient='vertical']::-moz-range-track {
+  height: 100%;
+  width: 100%;
   cursor: pointer;
   background: #d9d9da;
 }
