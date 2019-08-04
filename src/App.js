@@ -394,233 +394,236 @@ class App extends React.PureComponent {
 
   render() {
     return (
-      <div
-        onKeyDown={this.handleKeyDown}
-        onKeyUp={this.handleKeyUp}
-        tabIndex={0}
-        className="synth row"
-      >
-        <div className="col col-1 margin-l-col-1">
-          <Oscilloscope className="margin-t-96" />
-        </div>
-        <div className="col col-3 margin-l-24">
-          <div className="row margin-t-96 margin-b-row-3">
-            <RadioBank
-              options={[
-                {label: <SineIcon />, value: 'sine'},
-                {label: <SquareIcon />, value: 'square'},
-                {label: <TriangleIcon />, value: 'triangle'},
-                {label: <SawIcon />, value: 'sawtooth'},
-              ]}
-              name="osc1-wave"
-              onChange={oscType =>
-                this.state.synth1.set({
-                  oscillator: {
-                    type: oscType,
-                  },
-                })
-              }
-            />
-            <Slider
-              min={0}
-              max={1}
-              step="any"
-              label="A"
-              onChange={v =>
-                this.state.synth1.voices.forEach(
-                  synth => (synth.envelope.attack = v),
-                )
-              }
-              initialValue={this.state.synth1.voices[0].envelope.attack}
-            />
-            <Slider
-              min={0}
-              max={1}
-              step="any"
-              label="D"
-              onChange={v =>
-                this.state.synth1.voices.forEach(
-                  synth => (synth.envelope.decay = v),
-                )
-              }
-              initialValue={this.state.synth1.voices[0].envelope.decay}
-            />
-            <Slider
-              min={0}
-              max={1}
-              step="any"
-              label="S"
-              onChange={v =>
-                this.state.synth1.voices.forEach(
-                  synth => (synth.envelope.sustain = v),
-                )
-              }
-              initialValue={this.state.synth1.voices[0].envelope.sustain}
-            />
-            <Slider
-              min={0.005}
-              max={3}
-              step="any"
-              label="R"
-              className="margin-r-8"
-              onChange={v =>
-                this.state.synth1.voices.forEach(
-                  synth => (synth.envelope.release = v),
-                )
-              }
-              initialValue={this.state.synth1.voices[0].envelope.release}
-            />
-            <div className="col f-initial a-center j-between">
-              <Knob
-                small
-                onChange={() => {}}
-                defaultValue={0.5}
-                minAngle={-120}
-                maxAngle={120}
-                onChange={v =>
-                  this.state.synth1.set({
-                    detune: (Math.round(24 * v) - 12) * 100,
-                  })
-                }
-              />
-              <TuneIcon />
-              <Knob
-                small
-                onChange={v =>
+      <>
+        <div className="mobile-only">Open on desktop</div>
+        <div
+          onKeyDown={this.handleKeyDown}
+          onKeyUp={this.handleKeyUp}
+          tabIndex={0}
+          className="synth row"
+        >
+          <div className="col col-1 margin-l-col-1">
+            <Oscilloscope className="margin-t-96" />
+          </div>
+          <div className="col col-3 margin-l-24">
+            <div className="row margin-t-96 margin-b-row-3">
+              <RadioBank
+                options={[
+                  {label: <SineIcon />, value: 'sine'},
+                  {label: <SquareIcon />, value: 'square'},
+                  {label: <TriangleIcon />, value: 'triangle'},
+                  {label: <SawIcon />, value: 'sawtooth'},
+                ]}
+                name="osc1-wave"
+                onChange={oscType =>
                   this.state.synth1.set({
                     oscillator: {
-                      partials: [1, v ** 2, v ** 3, v ** 4, v ** 5, v ** 6],
+                      type: oscType,
                     },
                   })
                 }
               />
-              <HarmonicIcon />
-            </div>
-          </div>
-          <div className="row margin-b-96">
-            <RadioBank
-              options={[
-                {label: <SineIcon />, value: 'sine'},
-                {label: <SquareIcon />, value: 'square'},
-                {label: <TriangleIcon />, value: 'triangle'},
-                {label: <SawIcon />, value: 'sawtooth'},
-              ]}
-              name="osc2-wave"
-              onChange={oscType =>
-                this.state.synth2.set({
-                  oscillator: {
-                    type: oscType,
-                  },
-                })
-              }
-              defaultValue="triangle"
-            />
-            <Slider
-              min={0}
-              max={1}
-              step="any"
-              label="A"
-              onChange={v =>
-                this.state.synth2.voices.forEach(
-                  synth => (synth.envelope.attack = v),
-                )
-              }
-              initialValue={this.state.synth2.voices[0].envelope.attack}
-            />
-            <Slider
-              min={0}
-              max={1}
-              step="any"
-              label="D"
-              onChange={v =>
-                this.state.synth2.voices.forEach(
-                  synth => (synth.envelope.decay = v),
-                )
-              }
-              initialValue={this.state.synth2.voices[0].envelope.decay}
-            />
-            <Slider
-              min={0}
-              max={1}
-              step="any"
-              label="S"
-              onChange={v =>
-                this.state.synth2.voices.forEach(
-                  synth => (synth.envelope.sustain = v),
-                )
-              }
-              initialValue={this.state.synth2.voices[0].envelope.sustain}
-            />
-            <Slider
-              min={0.005}
-              max={3}
-              step="any"
-              label="R"
-              className="margin-r-8"
-              onChange={v =>
-                this.state.synth2.voices.forEach(
-                  synth => (synth.envelope.release = v),
-                )
-              }
-              initialValue={this.state.synth2.voices[0].envelope.release}
-            />
-            <div className="col f-initial a-center j-between">
-              <Knob
-                small
-                minAngle={-120}
-                maxAngle={120}
-                onChange={() => {}}
-                defaultValue={0.5}
+              <Slider
+                min={0}
+                max={1}
+                step="any"
+                label="A"
                 onChange={v =>
-                  this.state.synth1.set({
-                    detune: (Math.round(24 * v) - 12) * 100,
-                  })
+                  this.state.synth1.voices.forEach(
+                    synth => (synth.envelope.attack = v),
+                  )
                 }
+                initialValue={this.state.synth1.voices[0].envelope.attack}
               />
-              <TuneIcon />
-              <Knob
-                small
+              <Slider
+                min={0}
+                max={1}
+                step="any"
+                label="D"
                 onChange={v =>
+                  this.state.synth1.voices.forEach(
+                    synth => (synth.envelope.decay = v),
+                  )
+                }
+                initialValue={this.state.synth1.voices[0].envelope.decay}
+              />
+              <Slider
+                min={0}
+                max={1}
+                step="any"
+                label="S"
+                onChange={v =>
+                  this.state.synth1.voices.forEach(
+                    synth => (synth.envelope.sustain = v),
+                  )
+                }
+                initialValue={this.state.synth1.voices[0].envelope.sustain}
+              />
+              <Slider
+                min={0.005}
+                max={3}
+                step="any"
+                label="R"
+                className="margin-r-8"
+                onChange={v =>
+                  this.state.synth1.voices.forEach(
+                    synth => (synth.envelope.release = v),
+                  )
+                }
+                initialValue={this.state.synth1.voices[0].envelope.release}
+              />
+              <div className="col f-initial a-center j-between">
+                <Knob
+                  small
+                  onChange={() => {}}
+                  defaultValue={0.5}
+                  minAngle={-120}
+                  maxAngle={120}
+                  onChange={v =>
+                    this.state.synth1.set({
+                      detune: (Math.round(24 * v) - 12) * 100,
+                    })
+                  }
+                />
+                <TuneIcon />
+                <Knob
+                  small
+                  onChange={v =>
+                    this.state.synth1.set({
+                      oscillator: {
+                        partials: [1, v ** 2, v ** 3, v ** 4, v ** 5, v ** 6],
+                      },
+                    })
+                  }
+                />
+                <HarmonicIcon />
+              </div>
+            </div>
+            <div className="row margin-b-96">
+              <RadioBank
+                options={[
+                  {label: <SineIcon />, value: 'sine'},
+                  {label: <SquareIcon />, value: 'square'},
+                  {label: <TriangleIcon />, value: 'triangle'},
+                  {label: <SawIcon />, value: 'sawtooth'},
+                ]}
+                name="osc2-wave"
+                onChange={oscType =>
                   this.state.synth2.set({
                     oscillator: {
-                      partials: [1, v ** 2, v ** 3, v ** 4, v ** 5, v ** 6],
+                      type: oscType,
                     },
                   })
                 }
+                defaultValue="triangle"
               />
-              <HarmonicIcon />
-            </div>
-          </div>
-        </div>
-        <div className="col col-4 j-center margin-l-col-1">
-          <div className="row a-center">
-            <div className="col f-initial margin-r-16">
-              <LinkIcon />
-            </div>
-            <div className="col f-initial margin-r-32">
-              <Knob
-                onChange={val => {
-                  this.state.synth1.volume.value = -25 + val * 25;
-                  this.state.synth2.volume.value = val * -25;
-                }}
-                minAngle={-180}
-                maxAngle={0}
-                defaultValue={0.5}
-              />
-            </div>
-            <div className="col f-initial a-center j-between">
-              <Knob
-                medium
+              <Slider
+                min={0}
+                max={1}
+                step="any"
+                label="A"
                 onChange={v =>
-                  this.state.noise.set({volume: -25 * (1 - v) - 10})
+                  this.state.synth2.voices.forEach(
+                    synth => (synth.envelope.attack = v),
+                  )
                 }
+                initialValue={this.state.synth2.voices[0].envelope.attack}
               />
-              <NoiseIcon />
+              <Slider
+                min={0}
+                max={1}
+                step="any"
+                label="D"
+                onChange={v =>
+                  this.state.synth2.voices.forEach(
+                    synth => (synth.envelope.decay = v),
+                  )
+                }
+                initialValue={this.state.synth2.voices[0].envelope.decay}
+              />
+              <Slider
+                min={0}
+                max={1}
+                step="any"
+                label="S"
+                onChange={v =>
+                  this.state.synth2.voices.forEach(
+                    synth => (synth.envelope.sustain = v),
+                  )
+                }
+                initialValue={this.state.synth2.voices[0].envelope.sustain}
+              />
+              <Slider
+                min={0.005}
+                max={3}
+                step="any"
+                label="R"
+                className="margin-r-8"
+                onChange={v =>
+                  this.state.synth2.voices.forEach(
+                    synth => (synth.envelope.release = v),
+                  )
+                }
+                initialValue={this.state.synth2.voices[0].envelope.release}
+              />
+              <div className="col f-initial a-center j-between">
+                <Knob
+                  small
+                  minAngle={-120}
+                  maxAngle={120}
+                  onChange={() => {}}
+                  defaultValue={0.5}
+                  onChange={v =>
+                    this.state.synth1.set({
+                      detune: (Math.round(24 * v) - 12) * 100,
+                    })
+                  }
+                />
+                <TuneIcon />
+                <Knob
+                  small
+                  onChange={v =>
+                    this.state.synth2.set({
+                      oscillator: {
+                        partials: [1, v ** 2, v ** 3, v ** 4, v ** 5, v ** 6],
+                      },
+                    })
+                  }
+                />
+                <HarmonicIcon />
+              </div>
             </div>
-            <div className="col"></div>
+          </div>
+          <div className="col col-4 j-center margin-l-col-1">
+            <div className="row a-center">
+              <div className="col f-initial margin-r-16">
+                <LinkIcon />
+              </div>
+              <div className="col f-initial margin-r-32">
+                <Knob
+                  onChange={val => {
+                    this.state.synth1.volume.value = -25 + val * 25;
+                    this.state.synth2.volume.value = val * -25;
+                  }}
+                  minAngle={-180}
+                  maxAngle={0}
+                  defaultValue={0.5}
+                />
+              </div>
+              <div className="col f-initial a-center j-between">
+                <Knob
+                  medium
+                  onChange={v =>
+                    this.state.noise.set({volume: -25 * (1 - v) - 10})
+                  }
+                />
+                <NoiseIcon />
+              </div>
+              <div className="col"></div>
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 }
