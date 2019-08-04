@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/oww2/static/css/main.e18e94aa.chunk.css",
+    "main.js": "/oww2/static/js/main.aa9014ff.chunk.js",
+    "main.js.map": "/oww2/static/js/main.aa9014ff.chunk.js.map",
+    "runtime~main.js": "/oww2/static/js/runtime~main.c636dfd6.js",
+    "runtime~main.js.map": "/oww2/static/js/runtime~main.c636dfd6.js.map",
+    "static/js/2.1dcfa618.chunk.js": "/oww2/static/js/2.1dcfa618.chunk.js",
+    "static/js/2.1dcfa618.chunk.js.map": "/oww2/static/js/2.1dcfa618.chunk.js.map",
+    "index.html": "/oww2/index.html",
+    "precache-manifest.a448accb52703aeb2f71c3cbe0f246d2.js": "/oww2/precache-manifest.a448accb52703aeb2f71c3cbe0f246d2.js",
+    "service-worker.js": "/oww2/service-worker.js",
+    "static/css/main.e18e94aa.chunk.css.map": "/oww2/static/css/main.e18e94aa.chunk.css.map",
+    "static/media/index.css": "/oww2/static/media/Apercu_Regular.7f08dee7.woff"
+  }
+}
