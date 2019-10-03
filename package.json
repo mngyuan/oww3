@@ -2,9 +2,9 @@
   "name": "oww3",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://mngyuan.com/oww3",
+  "homepage": "http://oww3.mngyuan.com",
   "devDependencies": {
-    "babel-eslint": "10.0.2",
+    "babel-eslint": "10.0.3",
     "eslint": "^6.3.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^2.9.0",
